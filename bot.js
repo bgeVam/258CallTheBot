@@ -68,6 +68,13 @@ const actions = {
     console.log(error.message);
   },
 
+  // getInformation bot executes
+  ['getInformation'](sessionId, context, cb) {
+    // Here should go the api call, e.g.:
+    // context.forecast = apiCall(context.loc)
+    context.information = 'awesome!' ;
+    cb(context);
+  },
 };
 
 
