@@ -1,31 +1,24 @@
-jest.
-dontMock('../facebook.js').
-dontMock('request');
+var expect    = require("chai").expect;
+var fs = require('fs');
 
 process.env.WIT_TOKEN = 'wit_token';
 const FB = require('../facebook.js');
 
-describe('FB tests', () => {
+describe("facebook.js unit tests", () => {
 
-  it('FB creation', () => {
-    expect(FB.fbReq).not.toBeNull();
+  it("should create post request for facebook page", () => {
+    expect(FB.fbReq).to.not.be.null;
   });
 
-  it('FB fbMessage', () => {
+  it("should build facebook message given recipient, message and cb", () => {
     var ret = FB.fbMessage('sung', 'hello', {});
-    expect(ret).toBe(undefined); // no return, so undefined
+    expect(ret).to.not.be.null;
   });
 
-  it('FB getFirstMessagingEntry', () => {
-    var payload = null;
-    require('fs').readFile('__tests__/msg.json', 'utf8', function(err, data) {
-      if (err) throw err; // we'll not consider error handling for now
-      payload = JSON.parse(data);
-      expect(payload).not.toBeNull();
-
-      var ret = FB.getFirstMessagingEntry(payload);
-      expect(ret.message.text).toBe('in Hong Kong?');
-    });
+  it("should get first messaging entry from facebook message", () => {
+    var payload = JSON.parse(fs.readFileSync('__tests__/msg.json', 'utf8'));
+    var ret = FB.getFirstMessagingEntry(payload);
+    expect(ret.message.text).to.equal("in Hong Kong?");
   });
 
 });

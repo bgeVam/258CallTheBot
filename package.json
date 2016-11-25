@@ -6,13 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "bot": "node bot.js",
-    "test": "jest"
-  },
-  "author": "",
-  "license": "MIT",
-  "jest": {
-    "scriptPreprocessor": "<rootDir>/node_modules/babel-jest",
-    "unmockedModulePathPatterns": ["core-js/.*", "sshpk/.*"]
+    "test": "mocha --reporter spec __tests__/"
   },
   "dependencies": {
     "body-parser": "^1.15.0",
@@ -24,7 +18,8 @@
     "babel-jest": "^6.0.1",
     "babel-polyfill": "^6.1.4",
     "bl": "^1.0.0",
-    "jest-cli": "^0.7.1"
+    "chai": "^3.5.0",
+    "mocha": "^3.1.2"
   },
   "repository": {
     "type": "git",
