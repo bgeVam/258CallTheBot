@@ -1,7 +1,6 @@
 var expect    = require("chai").expect;
 var fs = require('fs');
 
-process.env.WIT_TOKEN = 'wit_token';
 const FB = require('../facebook.js');
 
 describe("facebook.js unit tests", () => {
