@@ -1,13 +1,31 @@
-jest
-  .dontMock('../bot.js');
+var expect = require("chai").expect;
+var request = require("request");
 
-process.env.WIT_TOKEN = 'wit_token';
-const bot = require('../bot.js');
+const bot = require("../bot.js");
+const Config = require("../const.js");
 
-describe('Bot tests', () => {
+const witToken = Config.WIT_TOKEN;
+const queryDate = "'" + new Date().toISOString().slice(0,10).replace(/-/g,"") + "'";
+const witUrl = "https://api.wit.ai/message";
+const minimumConfidence = 0.5;
 
-  it('Bot creation', () => {
-    const client = bot.getWit(); // Just testing the creation  
-    expect(client).not.toBeNull();
+describe("bot.js unit tests", () => {
+
+ it("should return explanation for \"sex\"", function(done) {
+
+  const problem = "What is Sex?";
+
+	request({url:witUrl, qs:{ v:queryDate, q:problem, access_token:witToken }}, function(err, response, body) {
+    var info = JSON.parse(body);
+    const searchQuery = info.entities.search_query[0];
+
+    expect(info._text).to.equal(problem);
+    expect(searchQuery.confidence).to.be.at.least(minimumConfidence);
+    expect(searchQuery.value).to.equal("Sex");
+    expect(searchQuery.suggested).to.be.true;
+
+    done();
+    });
   });
+ 
 });
