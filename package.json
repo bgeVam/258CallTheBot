@@ -21,7 +21,9 @@
     "chai": "^3.5.0",
     "mocha": "^3.1.2",
     "crypto": "^0.0.3",
-    "node-fetch": "^1.6.3"
+    "node-fetch": "^1.6.3",
+    "github": "^7.0.1",
+    "bluebird": "^3.4.5"
   },
   "repository": {
     "type": "git",

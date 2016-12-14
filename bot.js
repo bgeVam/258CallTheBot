@@ -158,6 +158,9 @@ const actions = {
                     } else {
                         context.information = "Connection Error: "+ response.statusCode;
                     }
+					
+					Config.docWriteIssue("getInformation: " + searchQuery, "## The user asked about: _" + searchQuery +"_\n## This is the answer of the bot:\n\n" + context.information, [ "getInformation" ]);
+					
                     return resolve(context);
                 });
             } else {
