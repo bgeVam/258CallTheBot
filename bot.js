@@ -133,6 +133,19 @@ const actions = {
       return Promise.resolve();
     }
   },
+
+    //notifyTherapist bot executes
+    notifyTherapist() {
+        return new Promise(function (resolve, reject) {
+            var text = "This chat needs a therapist: " + threadID.toString();
+            // meanwhile hardcoded Jeany Doe
+            var userID = "100014478432070";
+            fbMessage(userID, text);
+            //context.information = "A therapist is informed";
+            return resolve(context);
+        });
+    },
+
     // getInformation bot executes
     getInformation({context,entities}) {
         return new Promise(function(resolve,reject){
@@ -151,6 +164,7 @@ const actions = {
                             var pageId = Object.keys(pages)[0];
                             var text = pages[pageId].extract;
                             context.information = formatmsg(text);
+                            notifyTherapist();
                         }
                         catch (err) {
                             context.information = "Sorry I didn't get that, can you modify your question?";
@@ -209,6 +223,7 @@ app.post("/webhook", (req, res) => {
 
     // We retrieve the Facebook user ID of the sender
     const sender = messaging.sender.id;
+    var threadID = Threads.get(id);
 
     // We retrieve the user's current session, or create one if it doesn't exist
     // This is needed for our bot to figure out the conversation history
