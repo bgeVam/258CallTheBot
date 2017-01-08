@@ -164,9 +164,28 @@ const actions = {
               context.information = "searchQuery not found";
             }
         });
+    },
+    // setViolenceVictim bot executes
+    setViolenceVictim({context,entities}) {
+        return new Promise(function(resolve,reject){
+          context.violenceVictim = firstEntityValue(entities,"violence_victim");
+          return resolve(context);
+        });
+    },
+    // setViolenceOffender bot executes
+    setViolenceOffender({context,entities}) {
+        return new Promise(function(resolve,reject){
+          context.violenceOffender = firstEntityValue(entities,"violence_offender");
+          return resolve(context);
+        });
+    },
+        // setViolenceAction bot executes
+    setViolenceAction({context,entities}) {
+        return new Promise(function(resolve,reject){
+          context.violenceAction = firstEntityValue(entities,"violence_action"); 
+          return resolve(context);
+        });
     }
-  // You should implement your custom actions here
-  // See https://wit.ai/docs/quickstart
 };
 
 // Setting up our bot
