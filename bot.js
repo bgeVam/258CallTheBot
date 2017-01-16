@@ -158,8 +158,8 @@ const actions = {
                     } else {
                         context.information = "Connection Error: "+ response.statusCode;
                     }
-					
-					Config.docWriteIssue("getInformation: " + searchQuery, "## The user asked about: _" + searchQuery +"_\n## This is the answer of the bot:\n\n" + context.information, [ "getInformation" ]);
+
+                    Config.docWriteIssue("getInformation: " + searchQuery, "## The user asked about: _" + searchQuery +"_\n## This is the answer of the bot:\n\n" + context.information, [ "getInformation" ]);
 					
                     return resolve(context);
                 });
@@ -167,9 +167,36 @@ const actions = {
               context.information = "searchQuery not found";
             }
         });
+    },
+    // setViolenceVictim bot executes
+    setViolenceVictim({context,entities}) {
+        return new Promise(function(resolve,reject){
+          context.violenceVictim = firstEntityValue(entities,"victim");
+          return resolve(context);
+        });
+    },
+    // setViolenceOffender bot executes
+    setViolenceOffender({context,entities}) {
+        return new Promise(function(resolve,reject){
+          context.violenceOffender = firstEntityValue(entities,"offender");
+          return resolve(context);
+        });
+    },
+    // setViolenceAction bot executes
+    setViolenceAction({context,entities}) {
+        return new Promise(function(resolve,reject){
+          context.violenceAction = firstEntityValue(entities,"violence"); 
+          return resolve(context);
+        });
+    },
+    // documentViolence bot executes
+    documentViolence({context,entities}) {
+        return new Promise(function(resolve,reject){
+          //Config.docWriteIssue("violenceConsultation: " + violenceAction, "## Someone reported violence" + "\n Victim: " + violenceVictim + "\n Offender: " + violenceOffender + "\n Action: " + violenceAction, [ "violenceConsultation" ]);
+          Config.docWriteIssue("violenceConsultation: ", "## Someone reported violence" + "\n Victim: " + context.violenceVictim + "\n Offender: " + "\n Action: ", [ "violenceConsultation" ]);
+          return resolve(context);
+        });
     }
-  // You should implement your custom actions here
-  // See https://wit.ai/docs/quickstart
 };
 
 // Setting up our bot
