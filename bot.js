@@ -175,7 +175,7 @@ const actions = {
         return new Promise(function(resolve,reject){
           Config.docWriteIssue(
             "getInformation: " + searchQuery,
-            "## The user asked about: _" + searchQuery +"_\n\n ## The bot was unable to provide an answer.",
+            "## The user asked about: _" + searchQuery +"_\n\n :confused: :question: \n\n ## The bot was unable to provide an answer. :pensive:",
             [ "getInformation", "intervention needed" ]);
           return resolve(context);
         });
@@ -185,7 +185,7 @@ const actions = {
         return new Promise(function(resolve,reject){
           Config.docWriteIssue(
             "getInformation: " + searchQuery,
-            "## The user asked about: _" + searchQuery +"_\n\n ## This is the answer of the bot:\n\n" + botAnswer,
+            "## The user asked about: _" + searchQuery +"_\n\n :confused: :question: \n\n ## This is the answer of the bot:\n\n" + botAnswer +":smile:",
             [ "getInformation", "closed" ]);
           return resolve(context);
         });
