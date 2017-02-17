@@ -85,6 +85,10 @@ const fbMessage = (id, text) => {
 // ----------------------------------------------------------------------------
 // Wit.ai bot specific code
 
+//Global Variables
+var searchQuery;
+var botAnswer;
+
 // This will contain all user sessions.
 // Each session has an entry:
 // sessionId -> {fbid: facebookUserId, context: sessionState}
@@ -137,7 +141,7 @@ const actions = {
     getInformation({context,entities}) {
         return new Promise(function(resolve,reject){
 
-            var searchQuery = firstEntityValue(entities,"search_query");
+            searchQuery = firstEntityValue(entities,"search_query");
             if (searchQuery){
                 var queryUrl = "https://en.wikipedia.org/w/api.php?format=json&action=query&generator=search&gsrnamespace=0&gsrlimit=1&prop=extracts&exintro&explaintext&exsentences=5&exlimit=max&gsrsearch=" + searchQuery;
 
@@ -158,18 +162,34 @@ const actions = {
                     } else {
                         context.information = "Connection Error: "+ response.statusCode;
                     }
-					
-					Config.docWriteIssue("getInformation: " + searchQuery, "## The user asked about: _" + searchQuery +"_\n## This is the answer of the bot:\n\n" + context.information, [ "getInformation" ]);
-					
+                    botAnswer = context.information;
                     return resolve(context);
                 });
             } else {
               context.information = "searchQuery not found";
             }
         });
+    },
+    // documentInquiryInterventionNeeded bot executes
+    documentInquiryInterventionNeeded({context,entities}) {
+        return new Promise(function(resolve,reject){
+          Config.docWriteIssue(
+            "getInformation: " + searchQuery,
+            "## The user asked about: _" + searchQuery +"_\n\n ## The bot was unable to provide an answer.",
+            [ "getInformation", "intervention needed" ]);
+          return resolve(context);
+        });
+    },
+    // documentInquiryClosed bot executes
+    documentInquiryClosed({context,entities}) {
+        return new Promise(function(resolve,reject){
+          Config.docWriteIssue(
+            "getInformation: " + searchQuery,
+            "## The user asked about: _" + searchQuery +"_\n\n ## This is the answer of the bot:\n\n" + botAnswer,
+            [ "getInformation", "closed" ]);
+          return resolve(context);
+        });
     }
-  // You should implement your custom actions here
-  // See https://wit.ai/docs/quickstart
 };
 
 // Setting up our bot
