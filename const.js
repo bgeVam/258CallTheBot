@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 // Wit.ai parameters
 const WIT_TOKEN = process.env.WIT_TOKEN;
@@ -13,9 +13,12 @@ if (!FB_VERIFY_TOKEN) {
 
 const FB_APP_SECRET = process.env.FB_APP_SECRET;
 
+var GITHUB_AUTH_TOKEN = process.env.GITHUB_AUTH_TOKEN;
+
 module.exports = {
   WIT_TOKEN: WIT_TOKEN,
   FB_PAGE_TOKEN: FB_PAGE_TOKEN,
   FB_VERIFY_TOKEN: FB_VERIFY_TOKEN,
   FB_APP_SECRET: FB_APP_SECRET,
+  GITHUB_AUTH_TOKEN
 };

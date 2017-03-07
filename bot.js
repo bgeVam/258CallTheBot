@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 // Facebook Messenger API integration
 
@@ -10,6 +10,8 @@ const request = require("request");
 
 const FB = require("./facebook.js");
 const Config = require("./const.js");
+
+const dashboard = require("./dashboard.js");
 
 let Wit = null;
 let log = null;
@@ -85,6 +87,10 @@ const fbMessage = (id, text) => {
 // ----------------------------------------------------------------------------
 // Wit.ai bot specific code
 
+//Global Variables
+var searchQuery;
+var botAnswer;
+
 // This will contain all user sessions.
 // Each session has an entry:
 // sessionId -> {fbid: facebookUserId, context: sessionState}
@@ -137,7 +143,7 @@ const actions = {
     getInformation({context,entities}) {
         return new Promise(function(resolve,reject){
 
-            var searchQuery = firstEntityValue(entities,"search_query");
+            searchQuery = firstEntityValue(entities,"search_query");
             if (searchQuery){
                 var queryUrl = "https://en.wikipedia.org/w/api.php?format=json&action=query&generator=search&gsrnamespace=0&gsrlimit=1&prop=extracts&exintro&explaintext&exsentences=5&exlimit=max&gsrsearch=" + searchQuery;
 
@@ -158,15 +164,36 @@ const actions = {
                     } else {
                         context.information = "Connection Error: "+ response.statusCode;
                     }
+                    botAnswer = context.information;
                     return resolve(context);
                 });
             } else {
               context.information = "searchQuery not found";
             }
         });
+    },
+    // documentInquiryInterventionNeeded bot executes
+    documentInquiryInterventionNeeded({context,entities}) {
+        return new Promise(function(resolve,reject){
+          dashboard.docWriteIssue(
+            "getInformation: " + searchQuery,
+            "## The user asked about: _" + searchQuery +"_\n\n :confused: :question: \n\n ## The bot was unable to provide an answer. :pensive:\n\n Please help, @dr-john-information !",
+            [ "getInformation", "intervention needed" ],
+			"dr-john-information");
+          return resolve(context);
+        });
+    },
+    // documentInquiryClosed bot executes
+    documentInquiryClosed({context,entities}) {
+        return new Promise(function(resolve,reject){
+          dashboard.docWriteIssue(
+            "getInformation: " + searchQuery,
+            "## The user asked about: _" + searchQuery +"_\n\n :confused: :question: \n\n ## This is the answer of the bot:\n\n" + botAnswer +":smile:",
+            [ "getInformation", "closed" ],
+			"");
+          return resolve(context);
+        });
     }
-  // You should implement your custom actions here
-  // See https://wit.ai/docs/quickstart
 };
 
 // Setting up our bot
