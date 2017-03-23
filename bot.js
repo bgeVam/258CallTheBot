@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 // Facebook Messenger API integration
 
@@ -10,6 +10,8 @@ const request = require("request");
 
 const FB = require("./facebook.js");
 const Config = require("./const.js");
+
+const dashboard = require("./dashboard.js");
 
 let Wit = null;
 let log = null;
@@ -173,20 +175,22 @@ const actions = {
     // documentInquiryInterventionNeeded bot executes
     documentInquiryInterventionNeeded({context,entities}) {
         return new Promise(function(resolve,reject){
-          Config.docWriteIssue(
+          dashboard.docWriteIssue(
             "getInformation: " + searchQuery,
-            "## The user asked about: _" + searchQuery +"_\n\n :confused: :question: \n\n ## The bot was unable to provide an answer. :pensive:",
-            [ "getInformation", "intervention needed" ]);
+            "## The user asked about: _" + searchQuery +"_\n\n :confused: :question: \n\n ## The bot was unable to provide an answer. :pensive:\n\n Please help, @dr-john-information !",
+            [ "getInformation", "intervention needed" ],
+			"dr-john-information");
           return resolve(context);
         });
     },
     // documentInquiryClosed bot executes
     documentInquiryClosed({context,entities}) {
         return new Promise(function(resolve,reject){
-          Config.docWriteIssue(
+          dashboard.docWriteIssue(
             "getInformation: " + searchQuery,
             "## The user asked about: _" + searchQuery +"_\n\n :confused: :question: \n\n ## This is the answer of the bot:\n\n" + botAnswer +":smile:",
-            [ "getInformation", "closed" ]);
+            [ "getInformation", "closed" ],
+			"");
           return resolve(context);
         });
     }
